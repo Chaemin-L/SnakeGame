@@ -1,16 +1,12 @@
 #include <ncurses.h>
 #include <ctime>
 
-
-
 class Head{
-  int y, x; const char *ch;
+  int y, x;
 public:
   // constructor : print the Head
   Head(){
     y=10; x=30;
-    const char c = '3';
-    ch = &c;
     show();
   }
   int getY(){return y;}
@@ -19,29 +15,25 @@ public:
   void setposition(int i, int j){ y+=i, x+=j; }
   void show(){
     attron(COLOR_PAIR(3)); // head color on
-    mvprintw(y, x, ch);
+    mvprintw(y, x, "3");
     attroff(COLOR_PAIR(3)); //  off
   }
 };
 
 #define MAXLEN 50
 class Body{
-private:
-  const char*ch;
-
 public:
   int len = 2; int x[MAXLEN] = {0}, y[MAXLEN]= {0};
   // constructor : print the body
   Body(){
      y[0] = y[1] = 10;  x[0] = 31; x[1] = 32;
-    const char c = '4';
-    ch = &c;
     show();
   }
 
   // head에 종속적이므로, head의 위치를 인자로 받아 첫번째 body원소를 head의 위치로 이동
   // 나머지 body들은 앞의 body위치로 이동
   void setposition(int i, int j){
+    del();
     int by, bx, py, px;   //before (y,x)position, present (y,x)position
     by = y[0]; bx = x[0];
     y[0] = i; x[0] = j;
@@ -54,7 +46,7 @@ public:
   void show(){
     attron(COLOR_PAIR(2));  //  body color
     for(int i=0; i<len; i++){
-      mvprintw(y[i], x[i], ch);
+      mvprintw(y[i], x[i], "4");
     }
     attroff(COLOR_PAIR(2)); //  off
 
@@ -72,6 +64,11 @@ public:
     mvprintw(y[len-1], x[len-1] , " "); len--;}
 
     //if(len<3) GameOver = 1;
+
+    // 지나간 자취 삭제
+    void del(){
+      mvprintw(y[len-1], x[len-1], " ");
+    }
 
 };
 
@@ -113,7 +110,6 @@ public:
       hd.setposition(-1, 0);
       hd.show(); bd.show();
       refresh();
-      delay(0.5);
       break;
         // head position (y, x) => (y--, x)
         // , followed body.
@@ -127,7 +123,6 @@ public:
       hd.setposition(1, 0);
       hd.show(); bd.show();
       refresh();
-      delay(0.5);
       break;
       // head position (y, x) => (y++, x)
       // , followed body.
@@ -141,7 +136,6 @@ public:
       hd.setposition(0, 1);
       hd.show(); bd.show();
       refresh();
-      delay(0.5);
       break;
       // head position (y, x) => (y, x++)
       // , followed body.
@@ -155,7 +149,6 @@ public:
       hd.setposition(0, -1);
       hd.show(); bd.show();
       refresh();
-      delay(0.5);
       break;
         // head position (y, x) => (y, x--)
         // , followed body.
@@ -165,8 +158,8 @@ public:
 
   } //while (GameOver!=false)
 } // move()
-// delay 함수 구현
 
+// delay 함수 구현
 int delay(float secs){
   clock_t delay = secs * CLOCKS_PER_SEC;
   clock_t start = clock();
