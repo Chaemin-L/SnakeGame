@@ -76,12 +76,6 @@ public:
 };
 
 
-
-#define LEFT 75
-#define RIGHT 77
-#define UP 72
-#define DOWN 80
-
 class Snake{
   Head hd; Body bd; bool GameOver = false;
 public:
@@ -105,65 +99,64 @@ public:
   */
     // 키보드 입력이 있을 때
     //else{
-      int key;
-      key = getch();
-      key = getch();
-      switch(key){
-        case UP:
-        // 진행방향 반대로 이동하려 하거나 body에 부딪힐때, failed 창을 띄운다.
-        for(int i=0; i<bd.len; i++){
-          if(((hd.getY()-1) == bd.y[i])&&(hd.getX() == bd.x[i])) {
-            failed(); return;
-          }
+    char key;
+    key = getch();
+    switch(key){
+      case 'w':
+      // 진행방향 반대로 이동하려 하거나 body에 부딪힐때, failed 창을 띄운다.
+      for(int i=0; i<bd.len; i++){
+        if(((hd.getY()-1) == bd.y[i])&&(hd.getX() == bd.x[i])) {
+          failed(); return;
         }
-        bd.setposition(hd.getY(), hd.getX());
-        hd.setposition(-1, 0);
-        hd.show(); bd.show();
-        refresh();
-        delay(0.5);
-        break;
-          // head position (y, x) => (y--, x)
-          // , followed body.
-        case DOWN:
-        for(int i=0; i<bd.len; i++){
-          if(((hd.getY()+1) == bd.x[i])&&(hd.getX() == bd.x[i])) {
-            failed();  break;
-          }
-        }
-        bd.setposition(hd.getY(), hd.getX());
-        hd.setposition(1, 0);
-        hd.show(); bd.show();
-        refresh();
-        delay(0.5);
-        break;
-        // head position (y, x) => (y++, x)
+      }
+      bd.setposition(hd.getY(), hd.getX());
+      hd.setposition(-1, 0);
+      hd.show(); bd.show();
+      refresh();
+      delay(0.5);
+      break;
+        // head position (y, x) => (y--, x)
         // , followed body.
-        case RIGHT:
-        for(int i=0; i<bd.len; i++){
-          if(((hd.getX()+1) == bd.x[i])&&(hd.getY() == bd.y[i])) {
-            failed();  break;
-          }
-        }
-        bd.setposition(hd.getY(), hd.getX());
-        hd.setposition(0, 1);
-        hd.show(); bd.show();
-        refresh();
-        delay(0.5);
-        break;
-        // head position (y, x) => (y, x++)
-        // , followed body.
-        case LEFT:
-        for(int i=0; i<bd.len; i++){
-          if(((hd.getX()-1) == bd.x[i])&&(hd.getY() == bd.y[i])){
+      case 's':
+      for(int i=0; i<bd.len; i++){
+        if(((hd.getY()+1) == bd.x[i])&&(hd.getX() == bd.x[i])) {
           failed();  break;
-          }
         }
-        bd.setposition(hd.getY(), hd.getX());
-        hd.setposition(0, -1);
-        hd.show(); bd.show();
-        refresh();
-        delay(0.5);
-        break;
+      }
+      bd.setposition(hd.getY(), hd.getX());
+      hd.setposition(1, 0);
+      hd.show(); bd.show();
+      refresh();
+      delay(0.5);
+      break;
+      // head position (y, x) => (y++, x)
+      // , followed body.
+      case 'd':
+      for(int i=0; i<bd.len; i++){
+        if(((hd.getX()+1) == bd.x[i])&&(hd.getY() == bd.y[i])) {
+          failed();  break;
+        }
+      }
+      bd.setposition(hd.getY(), hd.getX());
+      hd.setposition(0, 1);
+      hd.show(); bd.show();
+      refresh();
+      delay(0.5);
+      break;
+      // head position (y, x) => (y, x++)
+      // , followed body.
+      case 'a':
+      for(int i=0; i<bd.len; i++){
+        if(((hd.getX()-1) == bd.x[i])&&(hd.getY() == bd.y[i])){
+        failed();  break;
+        }
+      }
+      bd.setposition(hd.getY(), hd.getX());
+      hd.setposition(0, -1);
+      hd.show(); bd.show();
+      refresh();
+      delay(0.5);
+      break;
         // head position (y, x) => (y, x--)
         // , followed body.
 
