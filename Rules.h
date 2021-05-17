@@ -1,6 +1,6 @@
-// 새게임 시작할 때 설정
-bool GameOver = false;
-int item = 0;
+#ifndef __RULES_H_
+#define __RULES_H_
+
 
 class Head {
     int y, x;
@@ -33,6 +33,8 @@ public:
 
 class Snake {
     Head hd; Body bd;
+    static bool GameOver;
+    static int item;
 public:
     void move();
     void keyIn(int y, int x);
@@ -41,4 +43,9 @@ public:
     void failed();
 
     void makeItem();
+
+    static void setGameStatus(bool b) {GameOver = b;}
+    static void setItemNum(int i) {item += i;}
 };
+
+#endif

@@ -1,10 +1,13 @@
+#ifndef __ITEM_H_
+#define __ITEM_H_
+
 #include "Rules.h"
 
 class Growth {
 	int x, y;
 
 public:
-	// »ý¼ºÀÚ(¾ÆÀÌÅÛ ÃâÇö)
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
 	Growth(Head &hd, Body &bd);
 
 	int getX() { return x; }
@@ -17,7 +20,7 @@ class Poison {
 	int x, y;
 
 public:
-	// »ý¼ºÀÚ(¾ÆÀÌÅÛ ÃâÇö)
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
 	Poison(Head &hd, Body &bd);
 
 	int getX() { return x; }
@@ -25,3 +28,5 @@ public:
 
 	void PoisonRule(Head &hd, Body &bd);
 };
+
+#endif

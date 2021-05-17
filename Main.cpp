@@ -1,6 +1,7 @@
 #include <ncurses.h>
 #include <iostream>
-#include "Rules.cpp"
+#include "Rules.h"
+#include "Item.h"
 
 
 

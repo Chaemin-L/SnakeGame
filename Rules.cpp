@@ -24,8 +24,8 @@ Body::Body() {
     show();
 }
 
-// head¿¡ Á¾¼ÓÀûÀÌ¹Ç·Î, headÀÇ À§Ä¡¸¦ ÀÎÀÚ·Î ¹Þ¾Æ Ã¹¹øÂ° body¿ø¼Ò¸¦ headÀÇ À§Ä¡·Î ÀÌµ¿
-// ³ª¸ÓÁö bodyµéÀº ¾ÕÀÇ bodyÀ§Ä¡·Î ÀÌµ¿
+// headï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì¹Ç·ï¿½, headï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½Ú·ï¿½ ï¿½Þ¾ï¿½ Ã¹ï¿½ï¿½Â° bodyï¿½ï¿½ï¿½Ò¸ï¿½ headï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½Ìµï¿½
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ bodyï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ bodyï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½Ìµï¿½
 void Body::setposition(int i, int j) {
     del();
     int by, bx, py, px;   //before (y,x)position, present (y,x)position
@@ -48,7 +48,7 @@ void Body::show() {
 
 // increase body length
 void Body::IncBody() {
-    // y[len-1]-y[len] = y[len-2]-y[len-1] ÀÓÀ» ÀÌ¿ë.
+    // y[len-1]-y[len] = y[len-2]-y[len-1] ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¿ï¿½.
     y[len] = 2 * y[len - 1] - y[len - 2];
     x[len] = 2 * x[len - 1] - x[len - 2];
     len++;
@@ -59,16 +59,18 @@ void Body::DecBody() {
     y[len - 1] = 0; x[len - 1] = 0;
     mvprintw(y[len - 1], x[len - 1], " "); len--;
 
-    if (len < 2) { GameOver == true; }
+    if (len < 2) { Snake::setGameStatus(true); }
 }
 
-// Áö³ª°£ ÀÚÃë »èÁ¦
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 void Body::del() {
     mvprintw(y[len - 1], x[len - 1], " ");
 }
 
 
 
+bool Snake::GameOver = false;
+int Snake::item = 0;
 void Snake::move() {
     while (GameOver != true) {
 
@@ -81,21 +83,25 @@ void Snake::move() {
             // head position (y, x) => (y--, x)
             // , followed body.
             keyIn(-1, 0);
+            break;
 
         case 's':
             // head position (y, x) => (y++, x)
             // , followed body.
             keyIn(1, 0);
+            break;
 
         case 'd':
             // head position (y, x) => (y, x++)
             // , followed body.
             keyIn(0, 1);
+            break;
 
         case 'a':
             // head position (y, x) => (y, x--)
             // , followed body.
             keyIn(0, -1);
+            break;
         }
 
 
@@ -103,13 +109,13 @@ void Snake::move() {
 } // move()
 
 void Snake::keyIn(int y, int x) {
-    // ÁøÇà¹æÇâ ¹Ý´ë·Î ÀÌµ¿ÇÏ·Á ÇÏ°Å³ª body¿¡ ºÎµúÈú¶§, failed Ã¢À» ¶ç¿î´Ù.
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ý´ï¿½ï¿½ï¿½ ï¿½Ìµï¿½ï¿½Ï·ï¿½ ï¿½Ï°Å³ï¿½ bodyï¿½ï¿½ ï¿½Îµï¿½ï¿½ï¿½ï¿½ï¿½, failed Ã¢ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.
     for (int i = 0; i < bd.len; i++) {
         if (((hd.getY() + y) == bd.y[i]) && ((hd.getX() + x) == bd.x[i])) {
             failed(); return;
         }
     }
-    // º®¿¡ ºÎµúÈú ¶§ fail
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½Îµï¿½ï¿½ï¿½ ï¿½ï¿½ fail
     if (((hd.getY() + y) == 0) || ((hd.getY() + y) == 20) || ((hd.getX() + x) == 0) || ((hd.getX() + x) == 59)) {
         failed(); return;
     }
@@ -118,10 +124,9 @@ void Snake::keyIn(int y, int x) {
     hd.setposition(y, x);
     hd.show(); bd.show();
     refresh();
-    break;
 }
 
-// delay ÇÔ¼ö ±¸Çö
+// delay ï¿½Ô¼ï¿½ ï¿½ï¿½ï¿½ï¿½
 int Snake::delay(float secs) {
     clock_t delay = secs * CLOCKS_PER_SEC;
     clock_t start = clock();
@@ -129,7 +134,7 @@ int Snake::delay(float secs) {
     return 0;
 }
 
-// failed Ãâ·Â
+// failed ï¿½ï¿½ï¿½ï¿½
 void Snake::failed() {
     mvprintw(20, 30, "FAILED");
     refresh();
@@ -137,7 +142,7 @@ void Snake::failed() {
 
 // Item
 void Snake::makeItem() {
-    if (item < 3) {
+    if (Snake::item < 3) {
         srand(time(NULL));
         if (rand() % 2) Growth(hd, bd);
         else Poison(hd, bd);
