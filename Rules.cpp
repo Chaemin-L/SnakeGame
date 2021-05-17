@@ -1,175 +1,145 @@
 #include <ncurses.h>
+#include <cstdlib>
 #include <ctime>
+#include "Rules.h"
+#include "Item.h"
 
-class Head{
-  int y, x;
-public:
-  // constructor : print the Head
-  Head(){
-    y=10; x=30;
+// constructor : print the Head
+Head::Head() {
+    y = 10; x = 30;
     show();
-  }
-  int getY(){return y;}
-  int getX(){return x;}
-  // headëŠ” í˜„ì¬ ìˆëŠ” ìœ„ì¹˜ ê¸°ì¤€ìœ¼ë¡œ i, jë§Œí¼ ì›€ì§ì„.
-  void setposition(int i, int j){ y+=i, x+=j; }
-  void show(){
+}
+
+void Head::show() {
     attron(COLOR_PAIR(3)); // head color on
     mvprintw(y, x, "3");
     attroff(COLOR_PAIR(3)); //  off
-  }
-};
+}
 
-#define MAXLEN 50
-class Body{
-public:
-  int len = 2; int x[MAXLEN] = {0}, y[MAXLEN]= {0};
-  // constructor : print the body
-  Body(){
-     y[0] = y[1] = 10;  x[0] = 31; x[1] = 32;
+
+
+// constructor : print the body
+Body::Body() {
+    y[0] = y[1] = 10;  x[0] = 31; x[1] = 32;
     show();
-  }
+}
 
-  // headì— ì¢…ì†ì ì´ë¯€ë¡œ, headì˜ ìœ„ì¹˜ë¥¼ ì¸ìë¡œ ë°›ì•„ ì²«ë²ˆì§¸ bodyì›ì†Œë¥¼ headì˜ ìœ„ì¹˜ë¡œ ì´ë™
-  // ë‚˜ë¨¸ì§€ bodyë“¤ì€ ì•ì˜ bodyìœ„ì¹˜ë¡œ ì´ë™
-  void setposition(int i, int j){
+// head¿¡ Á¾¼ÓÀûÀÌ¹Ç·Î, headÀÇ À§Ä¡¸¦ ÀÎÀÚ·Î ¹Ş¾Æ Ã¹¹øÂ° body¿ø¼Ò¸¦ headÀÇ À§Ä¡·Î ÀÌµ¿
+// ³ª¸ÓÁö bodyµéÀº ¾ÕÀÇ bodyÀ§Ä¡·Î ÀÌµ¿
+void Body::setposition(int i, int j) {
     del();
     int by, bx, py, px;   //before (y,x)position, present (y,x)position
     by = y[0]; bx = x[0];
     y[0] = i; x[0] = j;
-    for(int l=1; l<len; l++){
-      py = y[l]; px = x[l];
-      y[l] = by; x[l] = bx;
-      by = py; bx = px;
+    for (int l = 1; l < len; l++) {
+        py = y[l]; px = x[l];
+        y[l] = by; x[l] = bx;
+        by = py; bx = px;
     }
-  }
-  void show(){
+}
+
+void Body::show() {
     attron(COLOR_PAIR(2));  //  body color
-    for(int i=0; i<len; i++){
-      mvprintw(y[i], x[i], "4");
+    for (int i = 0; i < len; i++) {
+        mvprintw(y[i], x[i], "4");
     }
     attroff(COLOR_PAIR(2)); //  off
+}
 
-  }
+// increase body length
+void Body::IncBody() {
+    // y[len-1]-y[len] = y[len-2]-y[len-1] ÀÓÀ» ÀÌ¿ë.
+    y[len] = 2 * y[len - 1] - y[len - 2];
+    x[len] = 2 * x[len - 1] - x[len - 2];
+    len++;
+}
 
-  // increase body length
-  void IncBody(){
-    // y[len-1]-y[len] = y[len-2]-y[len-1] ì„ì„ ì´ìš©.
-    y[len] = 2*y[len-1]-y[len-2];
-    x[len] = 2*x[len-1]-x[len-2];
-    len++;}
-  // decrease body length
-  void DecBody(){
-    y[len-1] = 0; x[len-1] = 0;
-    mvprintw(y[len-1], x[len-1] , " "); len--;}
+// decrease body length
+void Body::DecBody() {
+    y[len - 1] = 0; x[len - 1] = 0;
+    mvprintw(y[len - 1], x[len - 1], " "); len--;
 
-    //if(len<3) GameOver = 1;
+    if (len < 2) { GameOver == true; }
+}
 
-    // ì§€ë‚˜ê°„ ìì·¨ ì‚­ì œ
-    void del(){
-      mvprintw(y[len-1], x[len-1], " ");
-    }
-
-};
+// Áö³ª°£ ÀÚÃë »èÁ¦
+void Body::del() {
+    mvprintw(y[len - 1], x[len - 1], " ");
+}
 
 
-class Snake{
-  Head hd; Body bd; bool GameOver = false;
-public:
-  void move(){
-    while(GameOver != true){
-      // í‚¤ë³´ë“œ ì…ë ¥ì´ ì—†ì„ ë•Œ, í—¤ë“œë‘ ì œì¼ ê°€ê¹Œìš´ body ë°˜ëŒ€ë°©í–¥ìœ¼ë¡œ ì§„í–‰.
-  /*  if (kbhit()){
-      if(hd.getY()==bd.y[0])
-        if(hd.getX()>bd.y[0]) {
-          hd.setposition(0,1);
-          hd.show();
-          bd.show();
-          delay();
+
+void Snake::move() {
+    while (GameOver != true) {
+
+        makeItem();
+
+        char key;
+        key = getch();
+        switch (key) {
+        case 'w':
+            // head position (y, x) => (y--, x)
+            // , followed body.
+            keyIn(-1, 0);
+
+        case 's':
+            // head position (y, x) => (y++, x)
+            // , followed body.
+            keyIn(1, 0);
+
+        case 'd':
+            // head position (y, x) => (y, x++)
+            // , followed body.
+            keyIn(0, 1);
+
+        case 'a':
+            // head position (y, x) => (y, x--)
+            // , followed body.
+            keyIn(0, -1);
         }
-        else {
-          hd.setposition(0,-1);
-          hd.show(); bd.show();
-          delay();
-        }
-      }
-  */
-    // í‚¤ë³´ë“œ ì…ë ¥ì´ ìˆì„ ë•Œ
-    //else{
-    char key;
-    key = getch();
-    switch(key){
-      case 'w':
-      // ì§„í–‰ë°©í–¥ ë°˜ëŒ€ë¡œ ì´ë™í•˜ë ¤ í•˜ê±°ë‚˜ bodyì— ë¶€ë”ªíë•Œ, failed ì°½ì„ ë„ìš´ë‹¤.
-      for(int i=0; i<bd.len; i++){
-        if(((hd.getY()-1) == bd.y[i])&&(hd.getX() == bd.x[i])) {
-          failed(); return;
-        }
-      }
-      bd.setposition(hd.getY(), hd.getX());
-      hd.setposition(-1, 0);
-      hd.show(); bd.show();
-      refresh();
-      break;
-        // head position (y, x) => (y--, x)
-        // , followed body.
-      case 's':
-      for(int i=0; i<bd.len; i++){
-        if(((hd.getY()+1) == bd.x[i])&&(hd.getX() == bd.x[i])) {
-          failed();  break;
-        }
-      }
-      bd.setposition(hd.getY(), hd.getX());
-      hd.setposition(1, 0);
-      hd.show(); bd.show();
-      refresh();
-      break;
-      // head position (y, x) => (y++, x)
-      // , followed body.
-      case 'd':
-      for(int i=0; i<bd.len; i++){
-        if(((hd.getX()+1) == bd.x[i])&&(hd.getY() == bd.y[i])) {
-          failed();  break;
-        }
-      }
-      bd.setposition(hd.getY(), hd.getX());
-      hd.setposition(0, 1);
-      hd.show(); bd.show();
-      refresh();
-      break;
-      // head position (y, x) => (y, x++)
-      // , followed body.
-      case 'a':
-      for(int i=0; i<bd.len; i++){
-        if(((hd.getX()-1) == bd.x[i])&&(hd.getY() == bd.y[i])){
-        failed();  break;
-        }
-      }
-      bd.setposition(hd.getY(), hd.getX());
-      hd.setposition(0, -1);
-      hd.show(); bd.show();
-      refresh();
-      break;
-        // head position (y, x) => (y, x--)
-        // , followed body.
 
-      }
-    //} //else ì…ë ¥ì´ ìˆì„ë•Œ.
 
-  } //while (GameOver!=false)
+    } //while (GameOver!=false)
 } // move()
 
-// delay í•¨ìˆ˜ êµ¬í˜„
-int delay(float secs){
-  clock_t delay = secs * CLOCKS_PER_SEC;
-  clock_t start = clock();
-  while((clock()-start) < delay) ;
-  return 0;
-}
-// failed ì¶œë ¥
-void failed(){
-  mvprintw(20, 30, "FAILED");
-  refresh();
+void Snake::keyIn(int y, int x) {
+    // ÁøÇà¹æÇâ ¹İ´ë·Î ÀÌµ¿ÇÏ·Á ÇÏ°Å³ª body¿¡ ºÎµúÈú¶§, failed Ã¢À» ¶ç¿î´Ù.
+    for (int i = 0; i < bd.len; i++) {
+        if (((hd.getY() + y) == bd.y[i]) && ((hd.getX() + x) == bd.x[i])) {
+            failed(); return;
+        }
+    }
+    // º®¿¡ ºÎµúÈú ¶§ fail
+    if (((hd.getY() + y) == 0) || ((hd.getY() + y) == 20) || ((hd.getX() + x) == 0) || ((hd.getX() + x) == 59)) {
+        failed(); return;
+    }
+
+    bd.setposition(hd.getY(), hd.getX());
+    hd.setposition(y, x);
+    hd.show(); bd.show();
+    refresh();
+    break;
 }
 
-};
+// delay ÇÔ¼ö ±¸Çö
+int Snake::delay(float secs) {
+    clock_t delay = secs * CLOCKS_PER_SEC;
+    clock_t start = clock();
+    while ((clock() - start) < delay);
+    return 0;
+}
+
+// failed Ãâ·Â
+void Snake::failed() {
+    mvprintw(20, 30, "FAILED");
+    refresh();
+}
+
+// Item
+void Snake::makeItem() {
+    if (item < 3) {
+        srand(time(NULL));
+        if (rand() % 2) Growth(hd, bd);
+        else Poison(hd, bd);
+    }
+}
