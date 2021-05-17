@@ -56,8 +56,8 @@ void Body::IncBody() {
 
 // decrease body length
 void Body::DecBody() {
-    y[len - 1] = 0; x[len - 1] = 0;
-    mvprintw(y[len - 1], x[len - 1], " "); len--;
+    mvprintw(y[len - 1], x[len - 1], " ");
+    y[len - 1] = 0; x[len - 1] = 0; len--;
 
     if (len < 2) { Snake::setGameStatus(true); }
 }
@@ -132,9 +132,11 @@ int Snake::delay(float secs) {
         switch(key){
           case 'w':
             keyIn(-1,0);
+            bd.DecBody();
             break;
           case 's':
             keyIn(1,0);
+            bd.IncBody();
             break;
           case 'd':
             keyIn(0,1);
