@@ -4,7 +4,7 @@
 class Head{
   int y, x;
 public:
-  // constructor : print the Head
+  // 생성자 : 게임 시작시 Head를 화면 중앙에 띄운다.
   Head(){
     y=10; x=30;
     show();
@@ -24,7 +24,7 @@ public:
 class Body{
 public:
   int len = 2; int x[MAXLEN] = {0}, y[MAXLEN]= {0};
-  // constructor : print the body
+  // 생성자 : 게임 시작시 Body를 화면 중앙에 띄운다.
   Body(){
      y[0] = y[1] = 10;  x[0] = 31; x[1] = 32;
     show();
@@ -52,13 +52,14 @@ public:
 
   }
 
-  // increase body length
+  // Body 길이(len)가 1만큼 증가함에 따라 x, y 배열에 새로 생성되는 Body위치 할당.
   void IncBody(){
     // y[len-1]-y[len] = y[len-2]-y[len-1] 임을 이용.
     y[len] = 2*y[len-1]-y[len-2];
     x[len] = 2*x[len-1]-x[len-2];
     len++;}
-  // decrease body length
+
+  // Body 길이(len)가 1만큼 감소함에 따라 x, y 배열에서 해당 값 초기화
   void DecBody(){
     y[len-1] = 0; x[len-1] = 0;
     mvprintw(y[len-1], x[len-1] , " "); len--;}
@@ -76,96 +77,81 @@ public:
 class Snake{
   Head hd; Body bd; bool GameOver = false;
 public:
+  // 입력받은 방향으로 이동하는 메서드
+  void move(int dirY, int dirX){
+    // 진행방향 반대로 이동하려 하거나 body에 부딪힐때, failed 창을 띄운다.
+    for(int i=0; i<bd.len; i++){
+      if(((hd.getY()+dirY) == bd.y[i])&&(hd.getX() == bd.x[i])) {
+        failed(); GameOver = true; return;
+      }
+    }
+    bd.setposition(hd.getY(), hd.getX());
+    hd.setposition(dirY, dirX);
+    hd.show(); bd.show();
+    refresh();
+  }
+
+  // 게임이 진행되는 동안 작동하는 메인 알고리즘
+  // : 키입력에 따라 움직임을 제어한다.
   void move(){
     while(GameOver != true){
-      // 키보드 입력이 없을 때, 헤드랑 제일 가까운 body 반대방향으로 진행.
-  /*  if (kbhit()){
-      if(hd.getY()==bd.y[0])
-        if(hd.getX()>bd.y[0]) {
-          hd.setposition(0,1);
-          hd.show();
-          bd.show();
-          delay();
-        }
-        else {
-          hd.setposition(0,-1);
-          hd.show(); bd.show();
-          delay();
-        }
-      }
-  */
-    // 키보드 입력이 있을 때
-    //else{
-    char key;
-    key = getch();
-    switch(key){
-      case 'w':
-      // 진행방향 반대로 이동하려 하거나 body에 부딪힐때, failed 창을 띄운다.
-      for(int i=0; i<bd.len; i++){
-        if(((hd.getY()-1) == bd.y[i])&&(hd.getX() == bd.x[i])) {
-          failed(); return;
-        }
-      }
-      bd.setposition(hd.getY(), hd.getX());
-      hd.setposition(-1, 0);
-      hd.show(); bd.show();
-      refresh();
-      break;
-        // head position (y, x) => (y--, x)
-        // , followed body.
-      case 's':
-      for(int i=0; i<bd.len; i++){
-        if(((hd.getY()+1) == bd.x[i])&&(hd.getX() == bd.x[i])) {
-          failed();  break;
-        }
-      }
-      bd.setposition(hd.getY(), hd.getX());
-      hd.setposition(1, 0);
-      hd.show(); bd.show();
-      refresh();
-      break;
-      // head position (y, x) => (y++, x)
-      // , followed body.
-      case 'd':
-      for(int i=0; i<bd.len; i++){
-        if(((hd.getX()+1) == bd.x[i])&&(hd.getY() == bd.y[i])) {
-          failed();  break;
-        }
-      }
-      bd.setposition(hd.getY(), hd.getX());
-      hd.setposition(0, 1);
-      hd.show(); bd.show();
-      refresh();
-      break;
-      // head position (y, x) => (y, x++)
-      // , followed body.
-      case 'a':
-      for(int i=0; i<bd.len; i++){
-        if(((hd.getX()-1) == bd.x[i])&&(hd.getY() == bd.y[i])){
-        failed();  break;
-        }
-      }
-      bd.setposition(hd.getY(), hd.getX());
-      hd.setposition(0, -1);
-      hd.show(); bd.show();
-      refresh();
-      break;
-        // head position (y, x) => (y, x--)
-        // , followed body.
 
+    // 키보드 입력이 없을 때, 헤드랑 제일 가까운 body 반대방향으로 진행.
+    // Head의 y좌표==Body[0]의 y좌표일 경우 서로 수평을 이루므로 x좌표 값만 변화.
+    if(hd.getY()==bd.y[0]){
+      if(hd.getX()>bd.x[0]) {
+        move(0,1);
+        delay(0.3);
       }
-    //} //else 입력이 있을때.
+      else {
+        move(0,-1);
+        delay(0.3);
+      }
+    }
+    // Head의 x좌표==Body[0]의 x좌표일 경우 서로 수직을 이루므로 y좌표 값만 변화.
+    else{
+      if(hd.getY()>bd.y[0]) {
+        move(1,0);
+        delay(0.3);
+      }
+      else {
+        move(-1,0);
+        delay(0.3);
+      }
+    }
 
   } //while (GameOver!=false)
+
+  // 이 곳에 GameOver = true 일때의 화면을 제어할 부분 구현 필요.
+
 } // move()
 
-// delay 함수 구현
+// delay 함수 구현 & 지연되는 시간동안 키 입력이 들어오면 움직임 제어.
 int delay(float secs){
   clock_t delay = secs * CLOCKS_PER_SEC;
   clock_t start = clock();
-  while((clock()-start) < delay) ;
+  while((clock()-start) < delay) {
+    char key;
+    if(key=getch()){
+      switch(key){
+        case 'w':
+          move(-1,0);
+          break;
+        case 's':
+          move(1,0);
+          break;
+        case 'd':
+          move(0,1);
+          break;
+        case 'a':
+          move(0,-1);
+          break;
+      }
+    }
+  }
   return 0;
 }
+
 // failed 출력
 void failed(){
   mvprintw(20, 30, "FAILED");
