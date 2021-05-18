@@ -132,11 +132,9 @@ int Snake::delay(float secs) {
         switch(key){
           case 'w':
             keyIn(-1,0);
-            bd.DecBody();
             break;
           case 's':
             keyIn(1,0);
-            bd.IncBody();
             break;
           case 'd':
             keyIn(0,1);
