@@ -1,8 +1,12 @@
 #include <ncurses.h>
 #include <cstdlib>
-#include <ctime>
 #include "Rules.h"
 #include "Item.h"
+#include <vector>
+using std::vector;
+
+
+vector<Item> item;
 
 // constructor : print the Head
 Head::Head() {
@@ -15,6 +19,8 @@ void Head::show() {
     mvprintw(y, x, "3");
     attroff(COLOR_PAIR(3)); //  off
 }
+
+void Head::setposition(int i, int j) { y += i, x += j; }
 
 
 
@@ -70,37 +76,43 @@ void Body::del() {
 
 
 bool Snake::GameOver = false;
-int Snake::item = 0;
+Snake::Snake(){
+  t = time(NULL);
+  move();
+}
+
 void Snake::move() {
-      while (GameOver != true) {
-          if(time(NULL) - t > 5) {
-            makeItem();
-            t = time(NULL);
-          }
+  while (GameOver != true) {
+      if(time(NULL) - t > 3) {
+        makeItem();
+        t = time(NULL);
+      }
 
       // 키보드 입력이 없을 때, 헤드랑 제일 가까운 body 반대방향으로 진행.
       // Head의 y좌표==Body[0]의 y좌표일 경우 서로 수평을 이루므로 x좌표 값만 변화.
       if(hd.getY()==bd.y[0]){
         if(hd.getX()>bd.x[0]) {
           keyIn(0,1);
-          delay(0.5);
+          delay(0.4);
         }
         else {
           keyIn(0,-1);
-          delay(0.5);
+          delay(0.4);
         }
       }
       // Head의 x좌표==Body[0]의 x좌표일 경우 서로 수직을 이루므로 y좌표 값만 변화.
       else{
         if(hd.getY()>bd.y[0]) {
           keyIn(1,0);
-          delay(0.5);
+          delay(0.4);
         }
         else {
           keyIn(-1,0);
-          delay(0.5);
+          delay(0.4);
         }
       }
+
+
     } //while (GameOver!=false)
 } // move()
 
@@ -118,6 +130,8 @@ void Snake::keyIn(int y, int x) {
 
     bd.setposition(hd.getY(), hd.getX());
     hd.setposition(y, x);
+
+    itemRule();
     hd.show(); bd.show();
     refresh();
 }
@@ -157,9 +171,31 @@ void Snake::failed() {
 
 // Item
 void Snake::makeItem() {
-    if (item < 3) {
+    if (item.size() < 3) {
         srand(time(NULL));
-        if (rand() % 2) Growth(hd, bd);
-        else Poison(hd, bd);
+        if (rand() % 2) {
+          Growth g(hd, bd);
+          Item i(g);
+          item.emplace_back(i);
+        }
+        else {
+          Poison p(hd, bd);
+          Item i(p);
+          item.emplace_back(i);
+        }
     }
+}
+
+void Snake::setGameStatus(bool b) { GameOver = b; }
+
+
+
+
+
+void Snake::itemRule(){
+      for(int i = item.size()-1; i >=0; i--) {
+        if(item[i].rule() == -1){
+          item.erase(item.begin() + i);
+        }
+      }
 }

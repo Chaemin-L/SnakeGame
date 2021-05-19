@@ -10,9 +10,10 @@ public:
     int getY() { return y; }
     int getX() { return x; }
 
-    void setposition(int i, int j) { y += i, x += j; }
+    void setposition(int i, int j);
     void show();
 };
+
 
 #define MAXLEN 50
 class Body {
@@ -32,10 +33,11 @@ public:
 
 
 class Snake {
-    Head hd; Body bd; time_t t = time(NULL);
+    Head hd; Body bd; time_t t;
     static bool GameOver;
-    static int item;
 public:
+    Snake();
+
     void move();
     void keyIn(int y, int x);
 
@@ -44,8 +46,9 @@ public:
 
     void makeItem();
 
-    static void setGameStatus(bool b) {GameOver = b;}
-    static void setItemNum(int i) {item += i;}
+    static void setGameStatus(bool b);
+
+    void itemRule();
 };
 
 #endif

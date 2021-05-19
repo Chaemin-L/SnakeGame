@@ -1,90 +1,98 @@
 #include <ncurses.h>
 #include <iostream>
 #include <cstdlib>
-#include <ctime>
 #include "Rules.h"
 #include "Item.h"
 using namespace std;
 
-Growth::Growth(Head &hd, Body &bd) {
+Growth::Growth(Head &head, Body &body) : hd(&head), bd(&body) {
+	// �����Լ��� x, y ���ؼ� if������ snake ���̶� ������ �ٽ� (���̶� �����۳����� �� ��ġ��)
+	do {
 	srand(time(NULL));
 		x = rand()%58+1;
 		y = rand()%19+1;
-	// �����Լ��� x, y ���ؼ� if������ snake ���̶� ������ �ٽ� (���̶� �����۳����� �� ��ġ��)
-	while (x == hd.getX() || y == hd.getY()) {
-		srand(time(NULL));
-
-			x = rand()%58+1;
-			y = rand()%19+1;
 	}
+	while (x == hd->getX() || y == hd->getY());
 
 	attron(COLOR_PAIR(4));  // item color on
 	mvprintw(y, x, "5");
 	attroff(COLOR_PAIR(4)); // off
 	refresh();
 
-	time_t t = time(NULL);
-	Snake::setItemNum(1);
-	GrowthRule(hd, bd, t);
+	t = time(NULL);
 }
 
-void Growth::GrowthRule(Head &hd, Body &bd, time_t t) {
+int Growth::GrowthRule() {
 	if (time(NULL) - t > 10) {
 		mvprintw(y, x, " ");
-		Snake::setItemNum(-1);
+		refresh();
+		return -1;
 	}
 	// ������ũ�� ������ �ʿ��� ������
-	if (x == hd.getX() && y == hd.getY()) {
+	if (x == hd->getX() && y == hd->getY()) {
 		mvprintw(y, x, " ");
-		Snake::setItemNum(-1);
 
 		// ������ũ �ٵ� 1 ����
-		bd.setposition(hd.getY(), hd.getX());
-		bd.IncBody();
-		hd.setposition(-1, 0);
-		hd.show(); bd.show();
-		refresh();
+//		bd->setposition(hd->getY(), hd->getX());
+		bd->IncBody();
+//		hd->setposition(-1, 0);
+	//	hd->show(); bd->show();
+	//	refresh();
+		return -1;
 	}
+	return 0;
 }
 
 
-Poison::Poison(Head &hd, Body &bd) {
+Poison::Poison(Head &head, Body &body) : hd(&head), bd(&body) {
+	//��, body���� �� ����
+	do {
 	srand(time(NULL));
 		x = rand()%58+1;
 		y = rand()%19+1;
-
-	//��, body���� �� ����
-	while ((x == hd.getX()) || (y == hd.getY())) {
-		srand(time(NULL));
-			x = rand()%58+1;
-			y = rand()%19+1;
 	}
+	while (x == hd->getX() || y == hd->getY());
 
 	attron(COLOR_PAIR(5));  // item color on
 	mvprintw(y, x, "6");
 	attroff(COLOR_PAIR(5)); // off
 	refresh();
 
-	time_t t = time(NULL);
-	Snake::setItemNum(1);
-	PoisonRule(hd, bd, t);
+	t = time(NULL);
 }
 
-void Poison::PoisonRule(Head &hd, Body &bd, time_t t) {
+int Poison::PoisonRule() {
 	if (time(NULL) - t > 10) {
 		mvprintw(y, x, " ");
-		Snake::setItemNum(-1);
+		refresh();
+		return -1;
 	}
 	// ������ũ�� ������ �ʿ��� ������
-	if (x == hd.getX() && y == hd.getY()) {
+	if (x == hd->getX() && y == hd->getY()) {
 		mvprintw(y, x, " ");
-		Snake::setItemNum(-1);
 
 		// ������ũ �ٵ� 1 ����
-		bd.setposition(hd.getY(), hd.getX());
-		bd.DecBody();
-		hd.setposition(-1, 0);
-		hd.show(); bd.show();
-		refresh();
+	//	bd->setposition(hd->getY(), hd->getX());
+		bd->DecBody();
+	//	hd->setposition(-1, 0);
+	///	hd->show(); bd->show();
+//		refresh();
+		return -1;
 	}
+	return 0;
 }
+
+
+Item::Item(Growth g){ growp = g; }
+
+Item::Item(Poison p){ poisp = p; }
+
+int Item::rule(){
+		if (growp.getX()) { return growp.GrowthRule(); }
+		else{ return poisp.PoisonRule(); }
+}
+
+
+//bd가 연동이안되고 snk가 새로 생기는 문제-해결
+//아이템먹으면 위로감(방향이바뀜) 그리고 하나올라가면서 추가/삭제됨-해
+//먹자마자 안 되고 먹고 하나 다음에 추가/삭제

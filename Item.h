@@ -1,32 +1,55 @@
 #ifndef __ITEM_H_
 #define __ITEM_H_
-
+#include <ctime>
 #include "Rules.h"
 
 class Growth {
 	int x, y;
+	Head *hd; Body *bd;
+	time_t t;
 
 public:
 	// ������(������ ����)
-	Growth(Head &hd, Body &bd);
+	Growth() { x=0; }
+	Growth(Head &head, Body &body);
 
 	int getX() { return x; }
 	int getY() { return y; }
 
-	void GrowthRule(Head &hd, Body &bd, time_t);
+	int GrowthRule();
 };
+
 
 class Poison {
 	int x, y;
+	Head *hd; Body *bd;
+	time_t t;
 
 public:
 	// ������(������ ����)
-	Poison(Head &hd, Body &bd);
+	Poison(){ x=0; }
+	Poison(Head &head, Body &body);
 
 	int getX() { return x; }
 	int getY() { return y; }
 
-	void PoisonRule(Head &hd, Body &bd, time_t);
+	int PoisonRule();
 };
+
+
+class Item {
+//	Growth *growp = nullptr;
+//	Poison *poisp = nullptr;
+		Growth growp ;
+		Poison poisp ;
+
+public:
+	Item(Growth g);
+	Item(Poison p);
+
+	int rule();
+};
+
+
 
 #endif
