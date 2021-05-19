@@ -188,10 +188,6 @@ void Snake::makeItem() {
 
 void Snake::setGameStatus(bool b) { GameOver = b; }
 
-
-
-
-
 void Snake::itemRule(){
       for(int i = item.size()-1; i >=0; i--) {
         if(item[i].rule() == -1){

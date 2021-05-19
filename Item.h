@@ -38,8 +38,6 @@ public:
 
 
 class Item {
-//	Growth *growp = nullptr;
-//	Poison *poisp = nullptr;
 		Growth growp ;
 		Poison poisp ;
 

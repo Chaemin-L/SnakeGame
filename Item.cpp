@@ -33,11 +33,7 @@ int Growth::GrowthRule() {
 		mvprintw(y, x, " ");
 
 		// ������ũ �ٵ� 1 ����
-//		bd->setposition(hd->getY(), hd->getX());
 		bd->IncBody();
-//		hd->setposition(-1, 0);
-	//	hd->show(); bd->show();
-	//	refresh();
 		return -1;
 	}
 	return 0;
@@ -72,11 +68,7 @@ int Poison::PoisonRule() {
 		mvprintw(y, x, " ");
 
 		// ������ũ �ٵ� 1 ����
-	//	bd->setposition(hd->getY(), hd->getX());
 		bd->DecBody();
-	//	hd->setposition(-1, 0);
-	///	hd->show(); bd->show();
-//		refresh();
 		return -1;
 	}
 	return 0;
@@ -91,8 +83,3 @@ int Item::rule(){
 		if (growp.getX()) { return growp.GrowthRule(); }
 		else{ return poisp.PoisonRule(); }
 }
-
-
-//bd가 연동이안되고 snk가 새로 생기는 문제-해결
-//아이템먹으면 위로감(방향이바뀜) 그리고 하나올라가면서 추가/삭제됨-해
-//먹자마자 안 되고 먹고 하나 다음에 추가/삭제
