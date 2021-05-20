@@ -85,3 +85,8 @@ int Item::rule(){
 		if (growp.getX()) { return growp.GrowthRule(); }
 		else{ return poisp.PoisonRule(); }
 }
+
+void Item::clear(){
+		if (growp.getX()) { mvprintw(growp.getY(), growp.getX(), " "); }
+		else{ mvprintw(poisp.getY(), poisp.getX(), " "); }
+}

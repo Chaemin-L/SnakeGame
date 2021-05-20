@@ -10,6 +10,10 @@ vector<Item> item;
 
 // constructor : print the Head
 Head::Head() {
+    init();
+}
+
+void Head::init() {
     y = 10; x = 30;
     show();
 }
@@ -26,6 +30,11 @@ void Head::setposition(int i, int j) { y += i, x += j; }
 
 // constructor : print the body
 Body::Body() {
+    init();
+}
+
+void Body::init() {
+    len = 2; std::fill_n(x, MAXLEN, 0); std::fill_n(y, MAXLEN, 0);
     y[0] = y[1] = 10;  x[0] = 31; x[1] = 32;
     show();
 }
@@ -65,7 +74,7 @@ void Body::DecBody() {
     mvprintw(y[len - 1], x[len - 1], " ");
     y[len - 1] = 0; x[len - 1] = 0; len--;
 
-    if (len < 2) { Snake::setGameStatus(true); }
+    if (len < 2) { Snake::failed(); }
 }
 
 // 지나간 자취 삭제
@@ -76,6 +85,7 @@ void Body::del() {
 
 
 bool Snake::GameOver = false;
+
 Snake::Snake(){
   t = time(NULL);
   move();
@@ -141,6 +151,7 @@ int Snake::delay(float secs) {
     clock_t delay = secs * CLOCKS_PER_SEC;
     clock_t start = clock();
     while ((clock() - start) < delay){
+      if(GameOver == true) break;
       char key;
       if(key=getch()){
         switch(key){
@@ -166,7 +177,7 @@ int Snake::delay(float secs) {
 void Snake::failed() {
     mvprintw(20, 30, "FAILED");
     refresh();
-    Snake::GameOver = true;
+    GameOver = true;
 }
 
 // Item 생성 함수
@@ -186,7 +197,7 @@ void Snake::makeItem() {
     }
 }
 
-void Snake::setGameStatus(bool b) { GameOver = b; }
+//void Snake::setGameStatus(bool b) { GameOver = b; }
 
 void Snake::itemRule(){
       for(int i = item.size()-1; i >=0; i--) {
@@ -194,4 +205,26 @@ void Snake::itemRule(){
           item.erase(item.begin() + i);
         }
       }
+}
+
+void Snake::newGame(){
+  for(int i = item.size()-1; i >=0; i--) {
+    item[i].clear();
+    item.erase(item.begin() + i);
+  }
+
+  mvprintw(hd.getY(), hd.getX(), " ");
+  for (int i = 0; i < bd.len; i++) {
+     mvprintw(bd.y[i], bd.x[i], " ");
+  }
+  hd.init(); bd.init();
+
+	attron(COLOR_PAIR(2));
+  mvprintw(20, 30, "111111");
+	attroff(COLOR_PAIR(2));
+  refresh();
+
+  GameOver = false;
+  t = time(NULL);
+  move();
 }

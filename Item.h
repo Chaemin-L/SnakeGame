@@ -44,6 +44,7 @@ public:
 	Item(Poison p);
 
 	int rule();
+	void clear();
 };
 
 

@@ -23,8 +23,15 @@ int main()
 	border('1', '1', '1', '1', '2', '2', '2', '2');
 	attroff(COLOR_PAIR(2)); // off
 	Snake snk;
-	refresh();
-	while (getch() != 'q');
+//	refresh();
+	char a = getch();
+	while(a != 'q') {
+		if(a == 'r') {
+			snk.newGame();
+//			refresh();
+		}
+		a = getch();
+	}
 	endwin();
 	return 0;
 }

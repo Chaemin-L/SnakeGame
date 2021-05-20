@@ -6,6 +6,7 @@ class Head {
     int y, x;
 public:
     Head();
+    void init();
 
     int getY() { return y; }
     int getX() { return x; }
@@ -18,8 +19,9 @@ public:
 #define MAXLEN 50
 class Body {
 public:
-    int len = 2; int x[MAXLEN] = { 0 }, y[MAXLEN] = { 0 };
+    int len; int x[MAXLEN] = { 0 }, y[MAXLEN] = { 0 };
     Body();
+    void init();
 
     void setposition(int i, int j);
     void show();
@@ -42,13 +44,15 @@ public:
     void keyIn(int y, int x);
 
     int delay(float secs);
-    void failed();
+    static void failed();
 
     void makeItem();
 
-    static void setGameStatus(bool b);
+//    void setGameStatus(bool b);
 
     void itemRule();
+
+    void newGame();
 };
 
 #endif
