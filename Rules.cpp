@@ -30,8 +30,8 @@ Body::Body() {
     show();
 }
 
-// head�� �������̹Ƿ�, head�� ��ġ�� ���ڷ� �޾� ù��° body���Ҹ� head�� ��ġ�� �̵�
-// ������ body���� ���� body��ġ�� �̵�
+// head에 종속적이므로, head의 위치를 인자로 받아 첫번째 body원소를 head의 위치로 이동
+// 나머지 body들은 앞의 body위치로 이동
 void Body::setposition(int i, int j) {
     del();
     int by, bx, py, px;   //before (y,x)position, present (y,x)position
@@ -54,7 +54,7 @@ void Body::show() {
 
 // increase body length
 void Body::IncBody() {
-    // y[len-1]-y[len] = y[len-2]-y[len-1] ���� �̿�.
+    // y[len-1]-y[len] = y[len-2]-y[len-1] 임을 이용.
     y[len] = 2 * y[len - 1] - y[len - 2];
     x[len] = 2 * x[len - 1] - x[len - 2];
     len++;
@@ -68,7 +68,7 @@ void Body::DecBody() {
     if (len < 2) { Snake::setGameStatus(true); }
 }
 
-// ������ ���� ����
+// 지나간 자취 삭제
 void Body::del() {
     mvprintw(y[len - 1], x[len - 1], " ");
 }
@@ -117,13 +117,13 @@ void Snake::move() {
 } // move()
 
 void Snake::keyIn(int y, int x) {
-    // �������� �ݴ��� �̵��Ϸ� �ϰų� body�� �ε�����, failed â�� ������.
+    // 진행방향 반대로 이동하려 하거나 body에 부딪힐때, failed 창을 띄운다.
     for (int i = 0; i < bd.len; i++) {
         if (((hd.getY() + y) == bd.y[i]) && ((hd.getX() + x) == bd.x[i])) {
             failed(); return;
         }
     }
-    // ���� �ε��� �� fail
+    // 벽에 닿으면 fail
     if (((hd.getY() + y) == 0) || ((hd.getY() + y) == 20) || ((hd.getX() + x) == 0) || ((hd.getX() + x) == 59)) {
         failed(); return;
     }
@@ -136,7 +136,7 @@ void Snake::keyIn(int y, int x) {
     refresh();
 }
 
-// delay �Լ� ����
+// delay 함수 구현 & 지연되는 시간동안 키 입력이 들어오면 움직임 제어.
 int Snake::delay(float secs) {
     clock_t delay = secs * CLOCKS_PER_SEC;
     clock_t start = clock();
@@ -162,14 +162,14 @@ int Snake::delay(float secs) {
     return 0;
 }
 
-// failed ����
+// failed 출력
 void Snake::failed() {
     mvprintw(20, 30, "FAILED");
     refresh();
     Snake::GameOver = true;
 }
 
-// Item
+// Item 생성 함수
 void Snake::makeItem() {
     if (item.size() < 3) {
         srand(time(NULL));

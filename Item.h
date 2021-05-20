@@ -4,13 +4,12 @@
 #include "Rules.h"
 
 class Growth {
-	int x, y;
-	Head *hd; Body *bd;
+	int x = 0, y = 0;
+	Head *hd = nullptr; Body *bd = nullptr;
 	time_t t;
 
 public:
-	// ������(������ ����)
-	Growth() { x=0; }
+	Growth() {}
 	Growth(Head &head, Body &body);
 
 	int getX() { return x; }
@@ -21,13 +20,12 @@ public:
 
 
 class Poison {
-	int x, y;
-	Head *hd; Body *bd;
+	int x = 0, y = 0;
+	Head *hd = nullptr; Body *bd = nullptr;
 	time_t t;
 
 public:
-	// ������(������ ����)
-	Poison(){ x=0; }
+	Poison() {}
 	Poison(Head &head, Body &body);
 
 	int getX() { return x; }
@@ -38,8 +36,8 @@ public:
 
 
 class Item {
-		Growth growp ;
-		Poison poisp ;
+	Growth growp;
+	Poison poisp;
 
 public:
 	Item(Growth g);

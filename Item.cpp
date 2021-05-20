@@ -6,7 +6,7 @@
 using namespace std;
 
 Growth::Growth(Head &head, Body &body) : hd(&head), bd(&body) {
-	// �����Լ��� x, y ���ؼ� if������ snake ���̶� ������ �ٽ� (���̶� �����۳����� �� ��ġ��)
+	// snake, 벽, 이미 생성된 아이템 자리 제외하고 랜덤으로 x, y 받아서 아이템 생성
 	do {
 	srand(time(NULL));
 		x = rand()%58+1;
@@ -23,16 +23,17 @@ Growth::Growth(Head &head, Body &body) : hd(&head), bd(&body) {
 }
 
 int Growth::GrowthRule() {
+	// 생성 후 10초가 지나면 아이템 사라짐
 	if (time(NULL) - t > 10) {
 		mvprintw(y, x, " ");
 		refresh();
 		return -1;
 	}
-	// ������ũ�� ������ �ʿ��� ������
+	// snake head와 만나면 아이템 사라짐
 	if (x == hd->getX() && y == hd->getY()) {
 		mvprintw(y, x, " ");
 
-		// ������ũ �ٵ� 1 ����
+		// snake body 1 증가
 		bd->IncBody();
 		return -1;
 	}
@@ -41,7 +42,7 @@ int Growth::GrowthRule() {
 
 
 Poison::Poison(Head &head, Body &body) : hd(&head), bd(&body) {
-	//��, body���� �� ����
+	// snake, 벽, 이미 생성된 아이템 자리 제외하고 랜덤으로 x, y 받아서 아이템 생성
 	do {
 	srand(time(NULL));
 		x = rand()%58+1;
@@ -58,16 +59,17 @@ Poison::Poison(Head &head, Body &body) : hd(&head), bd(&body) {
 }
 
 int Poison::PoisonRule() {
+	// 생성 후 10초가 지나면 아이템 사라짐
 	if (time(NULL) - t > 10) {
 		mvprintw(y, x, " ");
 		refresh();
 		return -1;
 	}
-	// ������ũ�� ������ �ʿ��� ������
+	// snake head와 만나면 아이템 사라짐
 	if (x == hd->getX() && y == hd->getY()) {
 		mvprintw(y, x, " ");
 
-		// ������ũ �ٵ� 1 ����
+		// snake body 1 감소
 		bd->DecBody();
 		return -1;
 	}

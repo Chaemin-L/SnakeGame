@@ -24,7 +24,7 @@ int main()
 	attroff(COLOR_PAIR(2)); // off
 	Snake snk;
 	refresh();
-	getch();
+	while (getch() != 'q');
 	endwin();
 	return 0;
 }
