@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include "Rules.h"
 #include "Item.h"
+#include "Map.h"
 #include <vector>
 using std::vector;
 
@@ -14,7 +15,8 @@ Head::Head() {
 }
 
 void Head::init() {
-    y = 10; x = 30;
+    //
+    y = HEIGHT/2; x = WIDTH/2;
     show();
 }
 
@@ -35,7 +37,7 @@ Body::Body() {
 
 void Body::init() {
     len = 2; std::fill_n(x, MAXLEN, 0); std::fill_n(y, MAXLEN, 0);
-    y[0] = y[1] = 10;  x[0] = 31; x[1] = 32;
+    y[0] = y[1] = HEIGHT/2;  x[0] = WIDTH/2+1; x[1] = x[0]+1;
     show();
 }
 
@@ -134,10 +136,12 @@ void Snake::keyIn(int y, int x) {
         }
     }
     // 벽에 닿으면 fail
-    if (((hd.getY() + y) == 0) || ((hd.getY() + y) == 20) || ((hd.getX() + x) == 0) || ((hd.getX() + x) == 59)) {
+    //  => 특정 좌표 위의 문자를 입력 받아서 닿으면 failed  뜨도록 하고 싶었는데 실패.
+    //if(mvwinch(stdscr, hd.getY()+y, hd.getX()+x) == 0){
+    if (((hd.getY() + y) == 0) || ((hd.getY() + y) == HEIGHT-1) || ((hd.getX() + x) == 0) || ((hd.getX() + x) == WIDTH-1)) {
+      beep();
         failed(); return;
     }
-
     bd.setposition(hd.getY(), hd.getX());
     hd.setposition(y, x);
 
@@ -175,7 +179,8 @@ int Snake::delay(float secs) {
 
 // failed 출력
 void Snake::failed() {
-    mvprintw(20, 30, "FAILED");
+    beep();
+    mvprintw(HEIGHT-1, WIDTH/2, "FAILED");
     refresh();
     GameOver = true;
 }
@@ -213,16 +218,9 @@ void Snake::newGame(){
     item.erase(item.begin() + i);
   }
 
-  mvprintw(hd.getY(), hd.getX(), " ");
-  for (int i = 0; i < bd.len; i++) {
-     mvprintw(bd.y[i], bd.x[i], " ");
-  }
+  // clear and initiailize the screen
+  DrawMap(2);
   hd.init(); bd.init();
-
-	attron(COLOR_PAIR(2));
-  mvprintw(20, 30, "111111");
-	attroff(COLOR_PAIR(2));
-  refresh();
 
   GameOver = false;
   t = time(NULL);
