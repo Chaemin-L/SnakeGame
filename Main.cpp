@@ -2,13 +2,14 @@
 #include <iostream>
 #include "Rules.h"
 #include "Item.h"
+#include "Gate.h"
 #include "Map.h"
 
 
 int main()
 {
 	setBase();
-	DrawMap(2);
+	DrawMap(1);
 	Snake snk;
 	char a = getch();
 	while(a != 'q') {

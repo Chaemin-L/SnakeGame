@@ -35,8 +35,10 @@ public:
 
 
 class Snake {
-    Head hd; Body bd; time_t t;
+    Head hd; Body bd; time_t ti; time_t tg;
     static bool GameOver;
+  	bool isGate = false; bool passingGate = false;
+    int passtime = 0;
 public:
     Snake();
 
@@ -47,10 +49,12 @@ public:
     static void failed();
 
     void makeItem();
+    void itemRule();
+
+    void makeGate();
+    void isPassingGate();
 
 //    void setGameStatus(bool b);
-
-    void itemRule();
 
     void newGame();
 };

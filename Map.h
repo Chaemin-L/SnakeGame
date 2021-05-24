@@ -1,8 +1,8 @@
-#include <ncurses.h>
-
-// 충돌할까봐 써둔 ifndef-endif 인데 안써도 노상관..이었다.
-//#ifndef __MAP__H
-//#define __MAP__H
+#ifndef __MAP_H_
+#define __MAP_H_
+#include <vector>
+#include <array>
+using namespace std;
 
 #define HEIGHT 20
 #define WIDTH 60
@@ -13,4 +13,4 @@ void setBase();
 // clear and the draw the map
 void DrawMap(int level=1);
 
-//#endif
+#endif

@@ -1,16 +1,15 @@
 #include <ncurses.h>
 #include <iostream>
 #include <cstdlib>
-#include "Rules.h"
 #include "Item.h"
-using namespace std;
+#include "Map.h"
 
 Growth::Growth(Head &head, Body &body) : hd(&head), bd(&body) {
 	// snake, 벽, 이미 생성된 아이템 자리 제외하고 랜덤으로 x, y 받아서 아이템 생성
 	do {
-	srand(time(NULL));
-		x = rand()%58+1;
-		y = rand()%19+1;
+		srand(time(NULL));
+		x = rand()%(WIDTH-2)+1;
+		y = rand()%(HEIGHT-2)+1;
 	}
 	while (x == hd->getX() || y == hd->getY());
 
@@ -44,9 +43,9 @@ int Growth::GrowthRule() {
 Poison::Poison(Head &head, Body &body) : hd(&head), bd(&body) {
 	// snake, 벽, 이미 생성된 아이템 자리 제외하고 랜덤으로 x, y 받아서 아이템 생성
 	do {
-	srand(time(NULL));
-		x = rand()%58+1;
-		y = rand()%19+1;
+		srand(time(NULL));
+		x = rand()%(WIDTH-2)+1;
+		y = rand()%(HEIGHT-2)+1;
 	}
 	while (x == hd->getX() || y == hd->getY());
 

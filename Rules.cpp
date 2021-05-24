@@ -2,12 +2,11 @@
 #include <cstdlib>
 #include "Rules.h"
 #include "Item.h"
+#include "Gate.h"
 #include "Map.h"
-#include <vector>
-using std::vector;
-
 
 vector<Item> item;
+Gate gate;
 
 // constructor : print the Head
 Head::Head() {
@@ -20,13 +19,13 @@ void Head::init() {
     show();
 }
 
+void Head::setposition(int i, int j) { y += i, x += j; }
+
 void Head::show() {
     attron(COLOR_PAIR(3)); // head color on
     mvprintw(y, x, "3");
     attroff(COLOR_PAIR(3)); //  off
 }
-
-void Head::setposition(int i, int j) { y += i, x += j; }
 
 
 
@@ -37,7 +36,7 @@ Body::Body() {
 
 void Body::init() {
     len = 2; std::fill_n(x, MAXLEN, 0); std::fill_n(y, MAXLEN, 0);
-    y[0] = y[1] = HEIGHT/2;  x[0] = WIDTH/2+1; x[1] = x[0]+1;
+    y[0] = y[1] = HEIGHT/2; x[0] = WIDTH/2+1; x[1] = x[0]+1;
     show();
 }
 
@@ -89,15 +88,45 @@ void Body::del() {
 bool Snake::GameOver = false;
 
 Snake::Snake(){
-  t = time(NULL);
+  ti = time(NULL);
+  tg = time(NULL);
   move();
 }
 
 void Snake::move() {
-  while (GameOver != true) {
-      if(time(NULL) - t > 3) {
+  while (!GameOver) {
+      // 3초가 지날 때마다 아이템이 생성됨(3개 이하)
+      if(time(NULL) - ti > 3) {
         makeItem();
-        t = time(NULL);
+        ti = time(NULL);
+      }
+
+      // 게이트 통과할 때 알맞은 방향으로 진행되도록 하는 함수
+      if(passtime == 1) {
+        	int y = hd.getY(); int x = hd.getX();
+        	if (y == 1) {
+        			keyIn(1,0);
+        			delay(0.4);
+        	}
+        	else if (y == HEIGHT-2) {
+        			keyIn(-1,0);
+        			delay(0.4);
+        	}
+        	else if (x == 1) {
+        			keyIn(0,1);
+        			delay(0.4);
+        	}
+        	else if (x == WIDTH-2) {
+        			keyIn(0,-1);
+        			delay(0.4);
+        	}
+          continue;
+      }
+
+      // 10초마다 검사하여 게이트가 존재하지 않으면 게이트를 생성함
+      if(time(NULL) - tg > 10) {
+        makeGate();
+        tg = time(NULL);
       }
 
       // 키보드 입력이 없을 때, 헤드랑 제일 가까운 body 반대방향으로 진행.
@@ -124,6 +153,12 @@ void Snake::move() {
         }
       }
 
+      if(passtime >= bd.len+1) {
+          passingGate = false;
+          isGate = false;
+          gate.clear();
+          passtime = 0;
+      }
 
     } //while (GameOver!=false)
 } // move()
@@ -136,16 +171,17 @@ void Snake::keyIn(int y, int x) {
         }
     }
     // 벽에 닿으면 fail
-    //  => 특정 좌표 위의 문자를 입력 받아서 닿으면 failed  뜨도록 하고 싶었는데 실패.
-    //if(mvwinch(stdscr, hd.getY()+y, hd.getX()+x) == 0){
-    if (((hd.getY() + y) == 0) || ((hd.getY() + y) == HEIGHT-1) || ((hd.getX() + x) == 0) || ((hd.getX() + x) == WIDTH-1)) {
-      beep();
-        failed(); return;
-    }
+    if ((mvinch(hd.getY() + y, hd.getX() + x) & A_CHARTEXT) == '1') {
+      beep(); failed(); return;
+      }
+
     bd.setposition(hd.getY(), hd.getX());
     hd.setposition(y, x);
 
     itemRule();
+    isPassingGate();
+    if(passingGate){ passtime++; }
+
     hd.show(); bd.show();
     refresh();
 }
@@ -202,8 +238,6 @@ void Snake::makeItem() {
     }
 }
 
-//void Snake::setGameStatus(bool b) { GameOver = b; }
-
 void Snake::itemRule(){
       for(int i = item.size()-1; i >=0; i--) {
         if(item[i].rule() == -1){
@@ -212,17 +246,38 @@ void Snake::itemRule(){
       }
 }
 
+// Gate 생성 함수
+void Snake::makeGate() {
+    if (isGate) return;
+    gate = Gate(hd, bd);
+    isGate = true;
+}
+
+void Snake::isPassingGate() {
+    if(!isGate || passtime) return;
+    if(gate.passHead() == -1) {
+      passingGate = true;
+    }
+}
+
+//void Snake::setGameStatus(bool b) { GameOver = b; }
+
 void Snake::newGame(){
   for(int i = item.size()-1; i >=0; i--) {
     item[i].clear();
     item.erase(item.begin() + i);
   }
+  gate.clear();
+  isGate = false;
+  passingGate = false;
+  passtime = 0;
 
   // clear and initiailize the screen
   DrawMap(2);
   hd.init(); bd.init();
 
   GameOver = false;
-  t = time(NULL);
+  ti = time(NULL);
+  tg = time(NULL);
   move();
 }

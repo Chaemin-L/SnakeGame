@@ -1,6 +1,9 @@
 #include <ncurses.h>
 #include "Map.h"
 
+// Gate가 생길 수 있는 wall 좌표들을 모아놓은 벡터
+vector<array<int, 2>> wall;
+
 // set the game base settings
 void setBase(){
   initscr();
@@ -19,6 +22,7 @@ void setBase(){
 void DrawMap(int level){
   // initialize the window
   clear();
+  wall.clear();
   // according to level
   switch(level){
     case 1:
@@ -43,5 +47,13 @@ void DrawMap(int level){
     attron(COLOR_PAIR(2));  // border color on
   	border('1', '1', '1', '1', '2', '2', '2', '2');
   	attroff(COLOR_PAIR(2)); // off
+    // Gate가 생길 수 있는 wall 좌표들을 벡터에 추가
+    for(int i = 0; i < HEIGHT; i++) {
+      for(int j = 0; j < WIDTH; j++)
+        if((mvinch(i, j) & A_CHARTEXT) == '1') {
+          array<int, 2> a = {i, j};
+          wall.emplace_back(a);
+        }
+    }
     refresh();
 }
