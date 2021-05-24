@@ -103,24 +103,9 @@ void Snake::move() {
 
       // 게이트 통과할 때 알맞은 방향으로 진행되도록 하는 함수
       if(passtime == 1) {
-        	int y = hd.getY(); int x = hd.getX();
-        	if (y == 1) {
-        			keyIn(1,0);
-        			delay(0.4);
-        	}
-        	else if (y == HEIGHT-2) {
-        			keyIn(-1,0);
-        			delay(0.4);
-        	}
-        	else if (x == 1) {
-        			keyIn(0,1);
-        			delay(0.4);
-        	}
-        	else if (x == WIDTH-2) {
-        			keyIn(0,-1);
-        			delay(0.4);
-        	}
-          continue;
+      	keyIn(gate.keyinyx[0], gate.keyinyx[1]);
+        delay(0.4);
+        continue;
       }
 
       // 10초마다 검사하여 게이트가 존재하지 않으면 게이트를 생성함

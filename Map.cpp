@@ -14,8 +14,9 @@ void setBase(){
 	init_pair(1, COLOR_BLUE, COLOR_YELLOW); // background color
 	init_pair(2, COLOR_RED, COLOR_GREEN); // wall color
 	init_pair(3, COLOR_YELLOW, COLOR_RED);  //head color
-	init_pair(4, COLOR_YELLOW, COLOR_BLUE); // growth item color
-	init_pair(5, COLOR_GREEN, COLOR_MAGENTA); // poison item color
+	init_pair(4, COLOR_BLACK, COLOR_CYAN); // growth item color
+  init_pair(5, COLOR_CYAN, COLOR_MAGENTA); // poison item color
+	init_pair(6, COLOR_WHITE, COLOR_BLACK); // gate color
 	bkgd(COLOR_PAIR(1));
 }
 

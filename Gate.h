@@ -8,6 +8,7 @@ class Gate {
 	int x1, x2, y1, y2;
 
 public:
+	int keyinyx[2];
 	Gate() {};
 	Gate(Head &head, Body &body);
 
