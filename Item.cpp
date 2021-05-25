@@ -10,8 +10,9 @@ Growth::Growth(Head &head, Body &body) : hd(&head), bd(&body) {
 		srand(time(NULL));
 		x = rand()%(WIDTH-2)+1;
 		y = rand()%(HEIGHT-2)+1;
+		pos = (mvinch(y, x) & A_CHARTEXT);
 	}
-	while (x == hd->getX() || y == hd->getY());
+	while (pos == '1' || pos == '2' || pos == '3' || pos == '4' || pos == '5' || pos == '6' || pos == '7');
 
 	attron(COLOR_PAIR(4));  // item color on
 	mvprintw(y, x, "5");
@@ -46,8 +47,9 @@ Poison::Poison(Head &head, Body &body) : hd(&head), bd(&body) {
 		srand(time(NULL));
 		x = rand()%(WIDTH-2)+1;
 		y = rand()%(HEIGHT-2)+1;
+		pos = (mvinch(y, x) & A_CHARTEXT);
 	}
-	while (x == hd->getX() || y == hd->getY());
+	while (pos == '1' || pos == '2' || pos == '3' || pos == '4' || pos == '5' || pos == '6' || pos == '7');
 
 	attron(COLOR_PAIR(5));  // item color on
 	mvprintw(y, x, "6");

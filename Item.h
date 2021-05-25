@@ -6,6 +6,7 @@
 class Growth {
 	int x = 0, y = 0;
 	Head *hd = nullptr; Body *bd = nullptr;
+	char pos;
 	time_t t;
 
 public:
@@ -22,6 +23,7 @@ public:
 class Poison {
 	int x = 0, y = 0;
 	Head *hd = nullptr; Body *bd = nullptr;
+	char pos;
 	time_t t;
 
 public:

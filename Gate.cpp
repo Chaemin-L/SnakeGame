@@ -1,5 +1,4 @@
 #include <ncurses.h>
-#include <ctime>
 #include <cstdlib>
 #include "Gate.h"
 #include "Map.h"
@@ -29,6 +28,7 @@ void Gate::init() {
 		}
 		mvprintw(y2, x2, "7");
 		attroff(COLOR_PAIR(6));
+		t = time(NULL);
 		refresh();
 }
 
@@ -41,6 +41,12 @@ void Gate::clear() {
 }
 
 int Gate::passHead() {
+	// 생성 후 15초가 지나면 아이템 사라짐
+	if (time(NULL) - t > 15) {
+		clear();
+		return 1;
+	}
+
 	int hy = hd->getY(); int hx = hd->getX();
 	int by = bd->y[0]; int bx = bd->x[0];
 	int y = hy-by; int x = hx-bx;

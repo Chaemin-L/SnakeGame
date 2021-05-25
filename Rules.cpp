@@ -138,11 +138,13 @@ void Snake::move() {
         }
       }
 
+      // body까지 모두 Gate를 지나면 Gate 초기화
       if(passtime >= bd.len+1) {
+          gate.clear();
           passingGate = false;
           isGate = false;
-          gate.clear();
           passtime = 0;
+          tg = time(NULL);
       }
 
     } //while (GameOver!=false)
@@ -156,7 +158,7 @@ void Snake::keyIn(int y, int x) {
         }
     }
     // 벽에 닿으면 fail
-    if ((mvinch(hd.getY() + y, hd.getX() + x) & A_CHARTEXT) == '1') {
+    if ((mvinch(hd.getY() + y, hd.getX() + x) & A_CHARTEXT) == '1' || hd.getY() + y < 0 || hd.getY() + y > HEIGHT-1 || hd.getX() + x < 0 || hd.getX() + x > WIDTH-1) {
       beep(); failed(); return;
       }
 
@@ -240,8 +242,17 @@ void Snake::makeGate() {
 
 void Snake::isPassingGate() {
     if(!isGate || passtime) return;
-    if(gate.passHead() == -1) {
+
+    int n = gate.passHead();
+    if(n == 1) {
+      isGate = false;
+      gate.clear();
+      tg = time(NULL);
+      return;
+    }
+    if(n == -1) {
       passingGate = true;
+      return;
     }
 }
 
