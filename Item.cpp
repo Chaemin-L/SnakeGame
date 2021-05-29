@@ -35,6 +35,7 @@ int Growth::GrowthRule() {
 
 		// snake body 1 증가
 		bd->IncBody();
+		setItemState(true);
 		return -1;
 	}
 	return 0;
@@ -72,6 +73,7 @@ int Poison::PoisonRule() {
 
 		// snake body 1 감소
 		bd->DecBody();
+		setItemState(true);
 		return -1;
 	}
 	return 0;
@@ -90,4 +92,14 @@ int Item::rule(){
 void Item::clear(){
 		if (growp.getX()) { mvprintw(growp.getY(), growp.getX(), " "); }
 		else{ mvprintw(poisp.getY(), poisp.getX(), " "); }
+}
+
+int Item::CheckItem(){
+	if(growp.getX()){
+		if(growp.getItemState()==true) return 1;
+	}
+	else{
+		if(poisp.getItemState()==true) return 2;
+	}
+	return 0;
 }
