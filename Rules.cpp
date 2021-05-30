@@ -52,11 +52,11 @@ void Body::setposition(int i, int j) {
 }
 
 void Body::show() {
-    attron(COLOR_PAIR(2));  //  body color
+    attron(COLOR_PAIR(8));  //  body color
     for (int i = 0; i < len; i++) {
         mvprintw(y[i], x[i], "4");
     }
-    attroff(COLOR_PAIR(2)); //  off
+    attroff(COLOR_PAIR(8)); //  off
 }
 
 // increase body length
@@ -342,7 +342,7 @@ void Snake::reset(){
 
   // clear and initiailize the screen
   DrawMap(level);
-  state = {3, 0, 0, 0};
+  state = {3, 0, 0, 0, 3};
   UpdateBoard(score, state);
   hd.init(); bd.init();
 

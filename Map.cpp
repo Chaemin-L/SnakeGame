@@ -50,11 +50,12 @@ void setBase(){
   start_color();
 	init_pair(1, COLOR_BLUE, COLOR_YELLOW); // background color
 	init_pair(2, COLOR_RED, COLOR_GREEN); // wall color
-	init_pair(3, COLOR_YELLOW, COLOR_RED);  //head color
+	init_pair(3, COLOR_WHITE, COLOR_MAGENTA);  //head color
 	init_pair(4, COLOR_BLACK, COLOR_CYAN); // growth item color
   init_pair(5, COLOR_CYAN, COLOR_MAGENTA); // poison item color
 	init_pair(6, COLOR_WHITE, COLOR_BLACK); // gate color
   init_pair(7, COLOR_BLACK, COLOR_WHITE); // scoreboard color
+  init_pair(8, COLOR_MAGENTA, COLOR_BLACK); //body color
 
 	bkgd(COLOR_PAIR(1));
 }
@@ -72,7 +73,7 @@ void DrawMap(int level){
         mvprintw(i, 10, "1");
         mvprintw(i, 49, "1");
       }
-      missions = {3, 1, 0, 1};
+      missions = {6, 2, 1, 1};
       break;
     // level 2 : draw number 2
     case 2:
@@ -93,7 +94,7 @@ void DrawMap(int level){
         mvprintw(i, 6, "1");
         mvprintw(i, 44, "1");
       }
-      missions = {3, 1, 1, 0};
+      missions = {18, 6, 4, 4};
       break;
     // level 3 : draw number 3
     case 3:
@@ -109,7 +110,7 @@ void DrawMap(int level){
         mvprintw(i, 15, "1");
         mvprintw(i, 53, "1");
       }
-      missions = {3, 0, 1, 1};
+      missions = {30, 10, 13, 10};
       break;
 
     // level 4 : draw number 4
@@ -132,7 +133,7 @@ void DrawMap(int level){
         mvprintw(i, 13, "1");
         mvprintw(i, 51, "1");
       }
-      missions = {3, 1, 1, 1};
+      missions = {50, 20, 20, 15};
       break;
   }
     attroff(COLOR_PAIR(2));
