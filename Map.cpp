@@ -32,7 +32,7 @@ void theEnd(){
   delwin(mission);
   clear();
   mvprintw(9, 20, "Thank you for playing this game.*^^*");
-  mvprintw(10, 20, "This game was made by Jamin-Sim and Chaemin-Lee.");
+  mvprintw(10, 20, "This game was made by Jaemin-Sim and Chaemin-Lee.");
   mvprintw(11, 20, "KMU - Science of Software");
   refresh();
   isEnd = true;
@@ -172,7 +172,7 @@ void DrawBoard(){
   //score board
   score = newwin(9, 30, 1, 65);
   wbkgd(score, COLOR_PAIR(7));
-  mvwprintw(score, 3, 6, "/ 50(Max Body Length)");
+  mvwprintw(score, 3, 6, "/   (Max Body Length)");
   makeFrame(score, "Score Board");
   // mission board
   mission = newwin(9, 30, 10, 65);
@@ -206,6 +206,12 @@ void UpdateBoard(WINDOW *board, const vector<int> &v){
     mvwprintw(board, 5, 4, minus);
     const char* gate = to_string(v[3]).c_str();
     mvwprintw(board, 6, 4, gate);
+    // state 벡터의 경우, 진행 중 최대 길이도 출력해야하므로.
+    if(v.size()>4){
+      const char* Maxbody = to_string(v[4]).c_str();
+      mvwprintw(board, 3, 8, Maxbody);
+    }
+
     wrefresh(board);
 
 }

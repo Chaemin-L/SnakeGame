@@ -19,7 +19,7 @@ public:
 };
 
 
-#define MAXLEN 50
+#define MAXLEN 100
 class Body {
 public:
     int len; int x[MAXLEN] = { 0 }, y[MAXLEN] = { 0 };
@@ -43,7 +43,7 @@ class Snake {
     static bool GameOver;
   	bool isGate = false; bool passingGate = false;
     int passtime = 0;
-    std::vector<int> state = {3,0,0,0};
+    std::vector<int> state = {3,0,0,0,3};
      int level = 1;
      bool levelUp = false;
 public:

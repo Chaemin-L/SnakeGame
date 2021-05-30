@@ -97,6 +97,8 @@ void Snake::move() {
       // 3초가 지날 때마다 아이템이 생성됨(3개 이하)
       makeItem();
 
+      if(state[0]>state[4]) UpdateBoard(score, state);
+
       // 게이트 통과할 때 알맞은 방향으로 진행되도록 하는 함수
       if(passtime == 1) {
       	keyIn(gate.keyinyx[0], gate.keyinyx[1]);
@@ -138,6 +140,8 @@ void Snake::move() {
           isGate = false;
           passtime = 0;
           tg = time(NULL);
+          plusGate();
+          checkMission();
       }
 
       if(levelUp){
@@ -149,8 +153,8 @@ void Snake::move() {
         level++;
         succeed();
         reset();
-      }
 
+      }
 
     } //while (GameOver!=false)
  level = 1;
@@ -228,12 +232,16 @@ void Snake::fail() {
 // fail 출력
 void Snake::succeed() {
     beep();
-    clock_t delay = 3 * CLOCKS_PER_SEC;
-    clock_t start = clock();
     mvprintw(HEIGHT-3, WIDTH/2-2, "Success!");
     mvprintw(HEIGHT-2, WIDTH/2-9, "~Next Stage Loading~");
+    attron(A_BLINK);
+    mvprintw(HEIGHT-2, WIDTH-15, "N(next level)");
+    attroff(A_BLINK);
     refresh();
-    while ((clock() - start) < delay){}
+    char k = getch();
+    while(k !='n'){ k= getch();}
+    nodelay(stdscr, 1);
+
     GameOver = false;
 }
 
@@ -296,17 +304,20 @@ void Snake::isPassingGate() {
     }
     if(n == -1) {
       passingGate = true;
-      plusGate();
-      checkMission();
       return;
     }
 }
 
 // 미션 통과시 V 표시 출력
 void Snake::checkMission(){
+  if(state[0]>state[4]) state[4] = state[0];
   UpdateBoard(score, state);
   int cnt=0;
-  for(int i=0; i<4; i++){
+  if(state[4]>=missions[0]){
+    mvwprintw(mission, 3, 8, "V");
+    cnt++;
+  }
+  for(int i=1; i<4; i++){
     if(state[i] >= missions[i]) {
       mvwprintw(mission, 3+i, 8, "V");
       cnt++;
