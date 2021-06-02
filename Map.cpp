@@ -9,7 +9,7 @@ vector<array<int, 2>> wall;
 bool isEnd = false;
 
 // 점수를 기록하는 window(score, mission)
-WINDOW *score = newwin(9, 30, 1, 65);;
+WINDOW *score = newwin(9, 30, 1, 65);
 WINDOW *mission;
 // 미션으로 주어지는 수(bdoy length, item, poision, gate)들이 담긴 벡터
 vector<int> missions;
@@ -94,7 +94,7 @@ void DrawMap(int level){
         mvprintw(i, 6, "1");
         mvprintw(i, 44, "1");
       }
-      missions = {18, 6, 4, 4};
+      missions = {8, 3, 2, 2};
       break;
     // level 3 : draw number 3
     case 3:
@@ -110,7 +110,7 @@ void DrawMap(int level){
         mvprintw(i, 15, "1");
         mvprintw(i, 53, "1");
       }
-      missions = {30, 10, 13, 10};
+      missions = {9, 4, 3, 3};
       break;
 
     // level 4 : draw number 4
@@ -133,7 +133,7 @@ void DrawMap(int level){
         mvprintw(i, 13, "1");
         mvprintw(i, 51, "1");
       }
-      missions = {50, 20, 20, 15};
+      missions = {10, 5, 5, 5};
       break;
   }
     attroff(COLOR_PAIR(2));

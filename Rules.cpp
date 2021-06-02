@@ -133,16 +133,6 @@ void Snake::move() {
         }
       }
 
-      // body까지 모두 Gate를 지나면 Gate 초기화
-      if(passtime >= bd.len+1) {
-          gate.clear();
-          passingGate = false;
-          isGate = false;
-          passtime = 0;
-          tg = time(NULL);
-          plusGate();
-          checkMission();
-      }
 
       if(levelUp){
         // 4단계 모두 통과시
@@ -178,6 +168,18 @@ void Snake::keyIn(int y, int x) {
     itemRule();
     isPassingGate();
     if(passingGate){ passtime++; }
+
+    // body까지 모두 Gate를 지나면 Gate 초기화
+    if(passtime >= bd.len+1) {
+        plusGate();
+        gate.clear();
+        passingGate = false;
+        isGate = false;
+        passtime = 0;
+        tg = time(NULL);
+        checkMission();
+    }
+
 
     hd.show(); bd.show();
     refresh();
