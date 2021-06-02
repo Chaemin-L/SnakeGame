@@ -179,6 +179,17 @@ void Snake::keyIn(int y, int x) {
         tg = time(NULL);
         checkMission();
     }
+    if(levelUp){
+      // 4단계 모두 통과시
+      if(level==4) {
+        theEnd();
+        return;
+      }
+      level++;
+      succeed();
+      reset();
+
+    }
 
 
     hd.show(); bd.show();
