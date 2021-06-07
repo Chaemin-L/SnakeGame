@@ -9,7 +9,7 @@
 int main()
 {
 	setBase();
-	theStart();	// 이거 왜 작동 안하는지...
+	theStart();
 	DrawMap(1);
 	Snake snk;
 	if(isEnd==true) return 0;
